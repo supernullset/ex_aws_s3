@@ -180,6 +180,18 @@ defmodule ExAws.S3Test do
             {"X-Amz-Signature", _}] = actual_query
   end
 
+  test "#presigned_url passing custom metadata option" do
+    {:ok, url} = S3.presigned_url(config(), :get, "bucket", "foo.txt", [metadata: [{"rabbits", "are great"}]])
+    uri = URI.parse(url)
+    actual_query = URI.query_decoder(uri.query) |> Enum.map(&(&1))
+    assert [{"X-Amz-Algorithm", "AWS4-HMAC-SHA256"},
+            {"X-Amz-Credential", _},
+            {"X-Amz-Date", _},
+            {"X-Amz-Expires", _},
+            {"X-Amz-SignedHeaders", "host;x-amz-meta-rabbits"},
+            {"X-Amz-Signature", _}] = actual_query
+  end
+
   test "#presigned_url file is path with slash" do
     {:ok, url} = S3.presigned_url(config(), :get, "bucket", "/foo/bar.txt")
     assert_pre_signed_url(url, "https://s3.amazonaws.com/bucket/foo/bar.txt", "3600")
