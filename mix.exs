@@ -54,7 +54,7 @@ defmodule ExAws.S3.Mixfile do
   defp ex_aws() do
     case System.get_env("AWS") do
       "LOCAL" -> {:ex_aws, path: "../ex_aws"}
-      _ -> {:ex_aws, github: "supernullset/ex_aws", branch: "sewillia/signed-custom-headers-v2"}
+      _ -> {:ex_aws, git: "https://github.com/supernullset/ex_aws.git", branch: "sewillia/signed-custom-headers-v2", override: true}
     end
   end
 end
